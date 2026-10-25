@@ -157,6 +157,10 @@ footer.site h4{font-family:var(--display);font-weight:400;font-size:17px;letter-
 footer.site a{color:var(--red);font-weight:700;text-decoration:none}
 footer.site p{margin:0}
 @media (max-width:480px){footer.site .wrap{grid-template-columns:1fr}}
+.credit{grid-column:1/-1;border-top:1px solid var(--line);padding-top:16px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12.5px}
+.credit strong{color:var(--ink);letter-spacing:.08em;text-transform:uppercase;font-size:11.5px}
+footer.site .credit a{font-weight:500;color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+footer.site .credit a:hover{color:var(--red)}
 @media (prefers-reduced-motion:no-preference){.sheet{animation:up .25s ease-out}@keyframes up{from{transform:translateY(30px);opacity:.6}}}
 
 /* Pantalla de bienvenida: elegir sede (look fijo en rojo de marca, igual en ambos temas) */
@@ -225,6 +229,7 @@ footer.site p{margin:0}
   <div><h4>San Pedro Plaza</h4><p>12:00 m. – 9:00 p. m.</p><p>WhatsApp 320 861 9863</p></div>
   <div><h4>Promociones</h4><p>Síguenos en <a href="https://www.instagram.com/sushitownneiva/" target="_blank" rel="noopener">@sushitownneiva</a></p></div>
   <div><h4>Contacto</h4><p>Sushitowncolombiasas@gmail.com</p></div>
+  <div class="credit"><span>Hecho por <strong>Camott</strong></span><a href="https://wa.me/573213973458?text=Hola%20Camott%2C%20vi%20el%20men%C3%BA%20digital%20de%20Sushitown%20y%20quiero%20uno%20para%20mi%20negocio" target="_blank" rel="noopener">¿Quieres un menú digital como este? Escríbenos</a></div>
 </div></footer>
 
 <div class="bar" id="bar" hidden><button id="openCart" type="button"><span class="count" id="barCount">0</span><span>Ver pedido</span><span class="tot" id="barTot">$0</span></button></div>
