@@ -1,3 +1,11 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Menú digital de Sushitown Neiva: pide sushi, ramen y más por WhatsApp a nuestras sedes Altollano y San Pedro Plaza.">
+<meta name="theme-color" content="#AC0202">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}</style>
 <title>Menú Sushitown</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,6 +28,7 @@
   --red:#F0413A; --red-ink:#FFFFFF; --red-soft:#3A1715; --pine:#7CC79A; --pine-soft:#173326;
   --wave:rgba(240,65,58,.08); --shadow:0 10px 30px rgba(0,0,0,.5); color-scheme:dark}
 
+[hidden]{display:none!important}
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
 button,input,textarea,select{font:inherit;color:inherit}
@@ -178,6 +187,9 @@ footer.site p{margin:0}
   @keyframes drift{to{background-position:52% 48%}}
 }
 </style>
+</head>
+<body>
+
 
 <div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gateQ">
   <div class="gate-in">
@@ -512,8 +524,11 @@ let tick;addEventListener("scroll",()=>{cancelAnimationFrame(tick);tick=requestA
 $("#salsas").innerHTML=SALSAS.map(s=>`<label><input type="checkbox" id="sal-${slug(s)}" value="${s}">${s}</label>`).join("");
 // limpiar líneas de productos que ya no existan
 Object.keys(cart).forEach(k=>{if(!P[cart[k].id])delete cart[k]});
-function openGate(){$("#gate").classList.remove("out");document.body.style.overflow="hidden";const b=document.querySelector(`[data-pick="${sede}"]`)||document.querySelector("[data-pick]");b&&b.focus({preventScroll:true})}
+function openGate(){$("#gate").classList.remove("out");document.body.style.overflow="hidden"}
 function closeGate(){$("#gate").classList.add("out");if($("#overlay").hidden)document.body.style.overflow="";scrollTo({top:0})}
 renderSedes();renderMenu();renderBar();syncForm();openGate();
 setInterval(renderSedes,60000);
 </script>
+
+</body>
+</html>
