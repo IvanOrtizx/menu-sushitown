@@ -102,6 +102,24 @@ section{padding-top:26px;scroll-margin-top:120px}
 .opts{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;justify-content:center}
 .rolls{list-style:none;margin:6px auto 0;padding:0;display:flex;flex-wrap:wrap;justify-content:center;gap:4px 6px;max-width:52ch}
 .rolls li{font-size:12.5px;padding:3px 9px;border-radius:999px;background:var(--red-soft);color:var(--ink)}
+.pics{display:grid;gap:16px;margin:18px auto 8px;max-width:540px;padding:0 6px}
+.pics.n2{grid-template-columns:1fr 1fr;align-items:center}
+@media (max-width:440px){.pics.n2{grid-template-columns:1fr}}
+.pic{margin:0;background:var(--surface);padding:6px;border-radius:16px;box-shadow:var(--shadow);transform:rotate(var(--r,0deg));transition:transform .3s ease}
+.pic:hover{transform:rotate(0deg) scale(1.02)}
+.pic img{display:block;width:100%;height:auto;border-radius:11px}
+.promo{appearance:none;border:0;padding:0;cursor:pointer;width:100%;margin:24px 0 4px;border-radius:22px;overflow:hidden;display:grid;background:#120707;color:#fff;box-shadow:var(--shadow);text-align:center;font:inherit}
+.promo>*{grid-area:1/1}
+.promo img{width:100%;height:100%;min-height:260px;object-fit:cover}
+.promo .ov{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px;padding:18px 16px 18px;background:linear-gradient(180deg,rgba(18,4,4,.05) 0%,rgba(18,4,4,.55) 45%,rgba(18,4,4,.92) 100%)}
+.promo .flag{align-self:flex-start;margin-bottom:auto;background:rgba(255,255,255,.92);color:#111;border-radius:999px;padding:4px 12px;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.promo .flag.on{background:#7CF0A4}
+.promo .big{font-family:var(--display);font-size:clamp(64px,19vw,104px);line-height:.85;letter-spacing:.01em;text-shadow:0 4px 20px rgba(0,0,0,.5)}
+.promo .t1{font-family:var(--display);font-size:clamp(26px,7vw,36px);text-transform:uppercase;letter-spacing:.03em;line-height:1}
+.promo .days{margin-top:8px;background:#E2231A;border-radius:999px;padding:6px 16px;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:.04em}
+.promo .fine{font-size:12px;opacity:.85;margin-top:4px}
+.promo:focus-visible{outline:3px solid var(--red);outline-offset:3px}
+.promo-row{color:var(--pine);font-weight:700}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:35;width:min(92%,520px);background:var(--ink);color:var(--bg);border-radius:12px;padding:12px 16px;font-size:14px;text-align:center;box-shadow:var(--shadow)}
 .opt{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:3px 10px;font-size:12.5px;cursor:pointer}
 .opt[aria-pressed="true"]{border-color:var(--ink);background:var(--ink);color:var(--bg)}
@@ -270,6 +288,7 @@ footer.site .credit a:hover{color:var(--red)}
       <label class="field"><span>Comentarios del pedido</span><textarea id="f-com" rows="2"></textarea></label>
     </div>
     <footer>
+      <div class="row promo-row" id="promoRow" hidden><span>2×1 en tempuras</span><span id="promoAmt"></span></div>
       <div class="row big"><span>Subtotal</span><span id="sub">$0</span></div>
       <p class="hint" id="totHint">+ domicilio ($5.000 a $9.000)</p>
       <p class="msg" id="err" hidden></p>
@@ -288,8 +307,8 @@ const CV="Mezcla típica del Caribe colombiano con salsa de tomate, mayonesa, ci
 const NIN="acompañados con papa a la francesa y salsas.";
 const C=(name,price,rolls,extra)=>[name,price,extra||"",{rolls:rolls.split("|")}];
 const MENU=[
- {id:"combos",t:"Combos",k:"組",note:"Disponibles todos los días. Cada rollo trae 10 bocados.",groups:[
-  {t:"Mega combos",sub:"6 rollos · 60 bocados",items:[
+ {id:"combos",t:"Combos",k:"組",photo:"combo-bandeja",note:"Disponibles todos los días. Cada rollo trae 10 bocados.",groups:[
+  {t:"Mega combos",photo:"combo-mega",sub:"6 rollos · 60 bocados",items:[
    C("Super Mega Combo",105000,"Funky roll|Ebi tempura tilapia|Neiva roll|Ebi tempura salmón|Maduro yaki|Ebi tempura camarón","Incluye 6 alas, 6 palmitos crocantes y 6 aritos de cebolla apanados."),
    C("Mega Combo 1",81000,"Ebi tempura salmón|Ebi tempura camarón|Funky roll|Ebi tempura tilapia|Sago roll|Maduro roll"),
    C("Mega Combo 2",81000,"Ebi tempura camarón|Ebi tempura salmón|Kalamaroll|Ebi tempura tilapia|Chihiro roll|Mango roll"),
@@ -300,7 +319,7 @@ const MENU=[
    C("Combo 5 rollos #41",71000,"Ebi tempura tilapia|Chihiro|Skin rain|Ebi tempura|Koly tempura"),
    C("Combo 5 rollos #42",71000,"Acevichado apanado|Ebi tempura|Skin rain|Vegan roll|Luna media"),
    C("Combo 5 rollos #43",71000,"Luna media|Neiva roll|Sukina|Acevichado (apanado)|Funky")]},
-  {t:"Combos de 4 rollos",sub:"40 bocados · $62.000",items:[
+  {t:"Combos de 4 rollos",photo:"combo-barco",sub:"40 bocados · $62.000",items:[
    C("Combo 4 rollos #15",62000,"Ebi tempura salmón|Acevichado|Neiva (apanado)|Sago roll"),
    C("Combo 4 rollos #16",62000,"Ebi tempura camarón|Sukina roll|Spice roll|Calamar roll"),
    C("Combo 4 rollos #17",62000,"2 Ebi tempura|2 Acevichados"),
@@ -340,7 +359,7 @@ const MENU=[
    C("Dúo #38",35000,"Chicken roll|Ebi salmón")]}
  ]},
  {id:"sushi",t:"Sushi",k:"寿",note:"Todos los rolls vienen de 10 piezas.",groups:[
-  {t:"Salmón",items:[
+  {t:"Salmón",photo:"salmon",items:[
    ["Maduro Yaki",25000,D+"salmón fresco, aguacate y palmito, cubierto de láminas de maduro."],
    ["Mango Roll",25000,D+"salmón fresco, aguacate y palmito, cubierto de láminas finas de mango dulce."],
    ["Philadelphia Roll",25000,D+"queso crema, salmón fresco, aguacate y palmito, cubierto de mix de ajonjolí blanco y negro."],
@@ -353,7 +372,7 @@ const MENU=[
    ["Sushitown Roll",30000,D+"tilapia tempura, queso crema, palmito, chicharrón de salmón y aguacate, cubierto de massago y mix de ajonjolí.",{star:"De la casa"}],
    ["Town Roll",25000,D+"tilapia tempura, zanahoria en julianas, queso crema y palmito, con cobertura de alga."],
    ["Skin Rain",25000,D+"chicharrón de salmón, queso crema, aguacate y palmito, envuelto en alga nori."]]},
-  {t:"Camarón o langostino",items:[
+  {t:"Camarón o langostino",photo:"camaron",items:[
    ["Langostino Roll",30000,D+"langostino tempura, queso crema, palmito y aguacate, cubierto de massago y mix de ajonjolí."],
    ["Hoshi Roll",33000,D+"camarón tempura, aguacate, queso crema y pepino, con cobertura de tartar de anguila en salsa teriyaki."],
    ["Acevichado Roll",27000,D+"camarón tempura, palmito, surimi y aguacate, cubierto de mix de ajonjolí y salsa acevichada."],
@@ -362,14 +381,14 @@ const MENU=[
    ["Funky Roll",27000,D+"camarón tempura, palmito y aguacate, cubierto de láminas finas de aguacate y mix de ajonjolí."],
    ["Sago Roll",30000,D+"camarón tempura, palmito y aguacate, cubierto de massago y mix de ajonjolí."],
    ["Tuna Roll",35000,D+"langostino tempura, aguacate, queso crema y palmito, con cobertura de atún rojo."]]},
-  {t:"Tempura",items:[
+  {t:"Tempura",id:"tempura",photo:"tempura",items:[
    ["Ebi Tempura Salmón",30000,D+"salmón, queso crema, aguacate y palmito, apanado en panko."],
    ["Ebi Tempura Camarón",30000,D+"camarón, queso crema, aguacate y palmito, apanado en panko."],
    ["Ebi Tempura Tilapia",30000,D+"tilapia tempura, queso crema, maduro y palmito, apanado en panko."],
    ["Koly Tempura",30000,D+"calamar apanado, mango y palmito, apanado en panko."],
    ["Luna Media",30000,D+"tilapia tempura, queso crema, aguacate y palmito, frito en tempura."],
    ["Chicken Roll",30000,D+"pollo apanado, maduro y palmito, apanado en panko."]]},
-  {t:"Especiales",items:[
+  {t:"Especiales",photo:["especiales-master","especiales-roll"],items:[
    ["Sushi Master 2024 · Gisei Town Roll",37000,D+"camarón apanado, maduro caramelizado en tocineta y queso crema, cubierto de tartar de surimi y mayo japonesa, bañado en reducción de cholupa y mix de ajonjolí.",{star:"Sushi Master"}],
    ["Sushi Master 2025 · Shimassu",37000,"Roll relleno de pepino europeo, palmito de cangrejo y tilapia tempura, coronado con salsa ceviche peruana, hilos crocantes de vermicelli y maíz tostao, bañado en reducción de mango.",{star:"Sushi Master"}],
    ["Ojo de Tigre",40000,D+"salmón, atún, kanikama, massago y aguacate, cubierto de mix de ajonjolí."],
@@ -384,7 +403,7 @@ const MENU=[
    ["Vegan Roll",25000,D+"queso crema, maduro, aguacate, pepino y zanahoria en julianas (tempura opcional).",{veg:1}],
    ["Tofuk Roll",25000,D+"kale, aguacate, calabacín y zukini verde y amarillo en tempura, con cobertura de mix de ajonjolí y ralladura de zanahoria.",{veg:1}]]}
  ]},
- {id:"ramen",t:"Ramen",k:"麺",only:"sp",items:[
+ {id:"ramen",t:"Ramen",k:"麺",photo:"ramen",only:"sp",items:[
   ["Ramen Dragon Hot",34000,"Sopa japonesa picante con fideos, huevo, mix de zucchini, champiñones, cerdo hot chilli, jalapeños, col china y alga nori.",{hot:1}],
   ["Ramen Chicken Crunch",33000,R+"pollo apanado"+RT],
   ["Ramen de Pollo",25000,R+"pollo salteado"+RT],
@@ -398,7 +417,7 @@ const MENU=[
   ["Yakimeshi de Pollo",25000],["Yakimeshi de Cerdo",27000],["Yakimeshi de Camarón",34000],
   ["Yakimeshi de Pollo y Cerdo",26000],["Yakimeshi de Pollo, Cerdo y Camarón",30000],
   ["Yakimeshi de Mariscos",33000],["Yakimeshi Vegetariano",20000,"",{veg:1}]]},
- {id:"entradas",t:"Entradas",k:"前",items:[
+ {id:"entradas",t:"Entradas",k:"前",photo:"tenders",items:[
   ["Palmitos Crocantes",20900,"6 palmitos crocantes en panko bañados en salsa teriyaki y dinamita, con papa a la francesa."],
   ["Tenders en Teriyaki",26900,"6 tenders de pechuga apanada, fritos y bañados en salsa teriyaki y sweet chilli, con papa a la francesa."],
   ["Bansai Wings",24900,"6 alitas de pollo bañadas en salsa teriyaki, con papa a la francesa."]],
@@ -408,7 +427,7 @@ const MENU=[
  {id:"ninos",t:"Menú niños",k:"子",items:[
   ["Nuggets de Tilapia",19900,"Nuggets de tilapia apanados en panko, "+NIN],
   ["Nuggets de Pollo",19900,"Nuggets de pollo apanados en panko, "+NIN]]},
- {id:"postres",t:"Postres",k:"甘",items:[
+ {id:"postres",t:"Postres",k:"甘",photo:"postre",items:[
   ["Mochis",11000,"Postre japonés relleno de helado y frutas de temporada, bañado en salsa de frutos rojos y/o arequipe."],
   ["Helado Frito",14000,"Helado con frutos de temporada apanado en panko crocante, bañado en salsa de frutos rojos y/o arequipe."]]},
  {id:"bebidas",t:"Bebidas",k:"飲",note:"Las bebidas a base de leche tienen un costo adicional de $2.000.",groups:[
@@ -474,25 +493,38 @@ function control(p){
 }
 function itemHTML(p){
   const opts=p.f.milk?`<div class="opts"><button type="button" class="opt" data-milk="${p.id}" data-v="0" aria-pressed="${!milkSel[p.id]}">En agua</button><button type="button" class="opt" data-milk="${p.id}" data-v="1" aria-pressed="${!!milkSel[p.id]}">En leche +$2.000</button></div>`:"";
-  return `<div class="item" data-id="${p.id}"><div class="txt"><h3>${esc(p.name)} ${badges(p.f)}</h3>${p.f.rolls?`<ul class="rolls">${p.f.rolls.map(r=>`<li>${esc(r)}</li>`).join("")}</ul>`:""}${p.desc?`<p>${esc(p.desc)}</p>`:""}${opts}</div>
+  return `<div class="item" data-id="${p.id}"><div class="txt"><h3>${esc(p.name)} ${badges(p.f)}${isTemp(p)?`<span class="badge hot">2×1 ${isPromoDay()?"hoy":"mar y jue"}</span>`:""}</h3>${p.f.rolls?`<ul class="rolls">${p.f.rolls.map(r=>`<li>${esc(r)}</li>`).join("")}</ul>`:""}${p.desc?`<p>${esc(p.desc)}</p>`:""}${opts}</div>
    <div class="side"><span class="price">${money(p.price+(milkSel[p.id]?2000:0))}</span><span class="ctl">${control(p)}</span></div></div>`;
 }
 const avail=c=>!c.only||c.only===sede;
+const DIMS={"promo-tempura": [573, 237], "combo-mega": [440, 157], "combo-bandeja": [450, 255], "camaron": [441, 330], "salmon": [439, 430], "ramen": [432, 373], "tenders": [205, 180], "tempura": [437, 213], "combo-barco": [365, 142], "especiales-master": [598, 160], "especiales-roll": [425, 272], "postre": [235, 178]};
+let tilt=0;
+function fig(ph){const a=[].concat(ph);return `<div class="pics n${a.length}">${a.map(k=>{const r=(tilt++%2?1.4:-1.6);const[w,h]=DIMS[k]||[4,3];return `<figure class="pic" style="--r:${r}deg"><img src="img/${k}.webp" width="${w}" height="${h}" alt="" loading="lazy" decoding="async"></figure>`}).join("")}</div>`}
+const isTemp=p=>p.grp&&p.grp.t==="Tempura";
+function isPromoDay(){const d=new Date(Date.now()-5*3600e3).getUTCDay();return d===2||d===4}
+function promo(){if(!isPromoDay())return 0;const u=[];Object.values(cart).forEach(l=>{if(isTemp(P[l.id]))for(let i=0;i<l.qty;i++)u.push(unit(l))});u.sort((a,b)=>a-b);let d=0;for(let i=0;i<Math.floor(u.length/2);i++)d+=u[i];return d}
+function promoHTML(){const hoy=isPromoDay();return `<button type="button" class="promo" data-go="tempura" aria-label="Ver tempuras en promoción 2x1">
+  <img src="img/promo-tempura.webp" alt="" width="${DIMS["promo-tempura"][0]}" height="${DIMS["promo-tempura"][1]}">
+  <span class="ov"><span class="flag ${hoy?"on":""}">${hoy?"¡Hoy aplica!":"Martes y jueves"}</span>
+  <span class="big">2×1</span><span class="t1">en tempuras</span>
+  <span class="days">Todos los martes y jueves</span>
+  <span class="fine">Únicamente en tempuras · Pagas una, la otra va gratis</span></span></button>`}
 function renderMenu(){
   const q=slug($("#q").value).replace(/-/g," ").trim();
   const match=p=>!q||slug(p.name+" "+p.desc+" "+(p.f.rolls||[]).join(" ")+" "+p.cat.t+" "+(p.grp&&p.grp.t||"")).replace(/-/g," ").includes(q);
-  let html="",any=false;
+  let html=q?"":promoHTML(),any=false;tilt=0;
   MENU.filter(avail).forEach(c=>{
     let body="";
     if(c.feature){const p=P[slug(c.feature[0])];if(match(p))body+=`<div class="feature" data-id="${p.id}"><div><h3>${esc(p.name)}</h3><p>${esc(p.desc)}</p></div><div class="side"><span class="price">${money(p.price)}</span><span class="ctl">${control(p)}</span></div></div>`}
     (c.groups||[{items:c.items}]).forEach(g=>{
       const its=g.items.map(a=>P[slug(a[0])]).filter(match);
       if(!its.length)return;
-      if(g.t)body+=`<h3 class="sub">${esc(g.t)}${g.sub?` <span>${g.sub}</span>`:""}</h3>`;
+      if(g.t)body+=`<h3 class="sub"${g.id?` id="${g.id}"`:""}>${esc(g.t)}${g.sub?` <span>${g.sub}</span>`:""}</h3>`;
+      if(g.photo&&!q)body+=fig(g.photo);
       body+=its.map(itemHTML).join("");
     });
     if(!body)return;any=true;
-    html+=`<section id="${c.id}"><div class="sec-head"><span class="kanji" aria-hidden="true">${c.k}</span><h2>${esc(c.t)}</h2></div>${c.note&&!q?`<p class="sec-note">${esc(c.note)}</p>`:""}${body}</section>`;
+    html+=`<section id="${c.id}"><div class="sec-head"><span class="kanji" aria-hidden="true">${c.k}</span><h2>${esc(c.t)}</h2></div>${c.note&&!q?`<p class="sec-note">${esc(c.note)}</p>`:""}${c.photo&&!q?fig(c.photo):""}${body}</section>`;
   });
   $("#menu").innerHTML=any?html:`<p class="empty">No encontramos platos con “${esc($("#q").value)}”.</p>`;
   $("#tabs").innerHTML=MENU.filter(avail).map(c=>`<button class="tab" type="button" data-go="${c.id}">${esc(c.t)}</button>`).join("");
@@ -511,7 +543,7 @@ function change(id,milk,d){
   save();refreshItem(id);renderBar();if(!$("#overlay").hidden)renderLines();
 }
 function totals(){let c=0,t=0;Object.values(cart).forEach(l=>{c+=l.qty;t+=l.qty*unit(l)});return{c,t}}
-function renderBar(){const{c,t}=totals();$("#bar").hidden=!c;$("#barCount").textContent=c;$("#barTot").textContent=money(t);$("#sub").textContent=money(t);updateLink()}
+function renderBar(){const{c,t}=totals();const d=promo();$("#bar").hidden=!c;$("#barCount").textContent=c;$("#barTot").textContent=money(t-d);$("#sub").textContent=money(t-d);$("#promoRow").hidden=!d;$("#promoAmt").textContent="−"+money(d);updateLink()}
 function renderLines(){
   const ls=Object.entries(cart);
   $("#lines").innerHTML=ls.length?ls.map(([k,l])=>{const p=P[l.id];return `<div class="line"><div class="nm">${esc(p.name)}${l.milk?" (en leche)":""}<small>${money(unit(l))} c/u</small></div>
@@ -532,7 +564,8 @@ function buildMsg(){
   Object.values(cart).forEach(l=>{const p=P[l.id];L.push(`• ${l.qty} x ${p.name}${l.milk?" (en leche)":""} — ${money(unit(l)*l.qty)}`);if(p.f.rolls)L.push(`   (${p.f.rolls.join(", ")})`);if(l.note)L.push(`   _Nota: ${l.note.trim()}_`)});
   const sal=[...document.querySelectorAll("#salsas input:checked")].map(i=>i.value);
   if(sal.length)L.push("","*Salsas:* "+sal.join(", "));
-  L.push("",`*Subtotal:* ${money(t)}`);
+  const pd=promo();if(pd)L.push("",`*Promo 2x1 tempuras:* −${money(pd)}`);
+  L.push(pd?"":"",`*Subtotal:* ${money(t-pd)}`);
   if(dom)L.push("_Domicilio aparte ($5.000 – $9.000), por confirmar_");
   L.push("",`*Entrega:* ${dom?"Domicilio":"Recoger en sede "+s.n}`);
   L.push(`*Nombre:* ${$("#f-nombre").value.trim()}`,`*Celular:* ${$("#f-cel").value.trim()}`);
