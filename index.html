@@ -100,6 +100,9 @@ section{padding-top:26px;scroll-margin-top:120px}
 .stepper button{border:0;background:transparent;color:inherit;width:34px;height:34px;font-size:18px;font-weight:700;cursor:pointer}
 .stepper span{min-width:18px;text-align:center;font-weight:700;font-variant-numeric:tabular-nums}
 .opts{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;justify-content:center}
+.rolls{list-style:none;margin:6px auto 0;padding:0;display:flex;flex-wrap:wrap;justify-content:center;gap:4px 6px;max-width:52ch}
+.rolls li{font-size:12.5px;padding:3px 9px;border-radius:999px;background:var(--red-soft);color:var(--ink)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:35;width:min(92%,520px);background:var(--ink);color:var(--bg);border-radius:12px;padding:12px 16px;font-size:14px;text-align:center;box-shadow:var(--shadow)}
 .opt{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:3px 10px;font-size:12.5px;cursor:pointer}
 .opt[aria-pressed="true"]{border-color:var(--ink);background:var(--ink);color:var(--bg)}
 
@@ -232,6 +235,7 @@ footer.site .credit a:hover{color:var(--red)}
   <div class="credit"><span>Hecho por <strong>Camott</strong></span><a href="https://wa.me/573213973458?text=Hola%20Camott%2C%20vi%20el%20men%C3%BA%20digital%20de%20Sushitown%20y%20quiero%20uno%20para%20mi%20negocio" target="_blank" rel="noopener">¿Quieres un menú digital como este? Escríbenos</a></div>
 </div></footer>
 
+<div class="toast" id="toast" role="status" hidden></div>
 <div class="bar" id="bar" hidden><button id="openCart" type="button"><span class="count" id="barCount">0</span><span>Ver pedido</span><span class="tot" id="barTot">$0</span></button></div>
 
 <div class="overlay" id="overlay" hidden>
@@ -282,7 +286,59 @@ const RT=", huevo, mix de zucchini salteado, champiñones, col china y alga nori
 const YK="Arroz salteado al estilo japonés con vegetales, tortilla de huevo y la proteína de tu elección, terminado con salsa de ajo, soya y jengibre.";
 const CV="Mezcla típica del Caribe colombiano con salsa de tomate, mayonesa, cilantro, zumo de limón, sal y pimienta, coronado con aguacate (picante opcional).";
 const NIN="acompañados con papa a la francesa y salsas.";
+const C=(name,price,rolls,extra)=>[name,price,extra||"",{rolls:rolls.split("|")}];
 const MENU=[
+ {id:"combos",t:"Combos",k:"組",note:"Disponibles todos los días. Cada rollo trae 10 bocados.",groups:[
+  {t:"Mega combos",sub:"6 rollos · 60 bocados",items:[
+   C("Super Mega Combo",105000,"Funky roll|Ebi tempura tilapia|Neiva roll|Ebi tempura salmón|Maduro yaki|Ebi tempura camarón","Incluye 6 alas, 6 palmitos crocantes y 6 aritos de cebolla apanados."),
+   C("Mega Combo 1",81000,"Ebi tempura salmón|Ebi tempura camarón|Funky roll|Ebi tempura tilapia|Sago roll|Maduro roll"),
+   C("Mega Combo 2",81000,"Ebi tempura camarón|Ebi tempura salmón|Kalamaroll|Ebi tempura tilapia|Chihiro roll|Mango roll"),
+   C("Mega Combo Especial",86000,"Super acevichado|Ebi tempura tilapia|Sago roll|Ebi tempura salmón|Neiva roll|Ebi tempura camarón")]},
+  {t:"Combos de 5 rollos",sub:"50 bocados · $71.000",items:[
+   C("Combo 5 rollos #39",71000,"2 Ebi tempura|Calamar roll|Ebi tempura tilapia|Skin rain"),
+   C("Combo 5 rollos #40",71000,"Ebi tempura|Skin rainbow|Maduro (apanado)|Acevichado (apanado)|Funky"),
+   C("Combo 5 rollos #41",71000,"Ebi tempura tilapia|Chihiro|Skin rain|Ebi tempura|Koly tempura"),
+   C("Combo 5 rollos #42",71000,"Acevichado apanado|Ebi tempura|Skin rain|Vegan roll|Luna media"),
+   C("Combo 5 rollos #43",71000,"Luna media|Neiva roll|Sukina|Acevichado (apanado)|Funky")]},
+  {t:"Combos de 4 rollos",sub:"40 bocados · $62.000",items:[
+   C("Combo 4 rollos #15",62000,"Ebi tempura salmón|Acevichado|Neiva (apanado)|Sago roll"),
+   C("Combo 4 rollos #16",62000,"Ebi tempura camarón|Sukina roll|Spice roll|Calamar roll"),
+   C("Combo 4 rollos #17",62000,"2 Ebi tempura|2 Acevichados"),
+   C("Combo 4 rollos #18",62000,"Chicken|Ebi camarón|Skin|Calamar roll"),
+   C("Combo 4 rollos #19",62000,"Ebi camarón|Ebi salmón|Ebi tilapia|Funky"),
+   C("Combo 4 rollos #20",62000,"Ebi tilapia|Skin rain|Spice roll|Ebi camarón"),
+   C("Combo 4 rollos #21",62000,"Funky apanado|Ebi tempura|Kalamaroll|Sukina"),
+   C("Combo 4 rollos #22",62000,"Mango roll|Ebi tempura|Ebi tilapia|Chihiro roll"),
+   C("Combo 4 rollos #23",62000,"Acevichado apanado|Calamar roll|Luna media|Skin rainbow"),
+   C("Combo 4 rollos #24",62000,"Ebi tempura|Funky|Acevichado|Luna media"),
+   C("Combo 4 rollos #25",62000,"Acevichado|Maduro|Neiva apanado|Ebi tempura"),
+   C("Combo 4 rollos #26",62000,"Calamar apanado|Acevichado|Skin|Neiva roll apanado")]},
+  {t:"Tríos",sub:"3 rollos · 30 bocados · $53.000",items:[
+   C("Trío #4",53000,"Ebi tempura salmón|Ebi tempura camarón|Acevichado roll"),
+   C("Trío #5",53000,"Skin rain|Funky roll|Ebi tempura tilapia"),
+   C("Trío #6",53000,"Ebi tempura camarón|Sukina|Chihiro roll"),
+   C("Trío #7",53000,"Ebi tempura camarón|Calamar roll (apanado)|Maduro roll"),
+   C("Trío #8",53000,"Ebi tempura camarón|Ebi tilapia|Mango roll"),
+   C("Trío #9",53000,"Ebi tempura salmón|Philadelphia|Spice roll"),
+   C("Trío #10",53000,"Chicken|Acevichado|Funky"),
+   C("Trío #11",53000,"Ebi tempura salmón|Ebi tempura camarón|Skin rain"),
+   C("Trío #12",53000,"Ebi tempura camarón|Chicken|Chihiro roll"),
+   C("Trío #13",53000,"Sukina roll|Vegan roll|Ebi tempura camarón"),
+   C("Trío #14",53000,"Koly tempura|Maduro|Skin rainbow")]},
+  {t:"Dúos",sub:"2 rollos · 20 bocados",items:[
+   C("Dúo #27",35000,"Ebi tempura|Ebi tempura camarón"),
+   C("Dúo #28",31000,"Ebi tempura|Acevichado"),
+   C("Dúo #29",35000,"Ebi tempura|Ebi tempura tilapia"),
+   C("Dúo #30",29000,"Maduro|Acevichado roll"),
+   C("Dúo #31",29000,"Philadelphia|Mango roll"),
+   C("Dúo #32",31000,"Chicken|Acevichado"),
+   C("Dúo #33",35000,"Funky|Sago roll"),
+   C("Dúo #34",29000,"Calamar roll|Maduro"),
+   C("Dúo #35",31000,"Mango|Luna media"),
+   C("Dúo #36",29000,"Sukina|Vegan roll"),
+   C("Dúo #37",31000,"Funky|Ebi tempura"),
+   C("Dúo #38",35000,"Chicken roll|Ebi salmón")]}
+ ]},
  {id:"sushi",t:"Sushi",k:"寿",note:"Todos los rolls vienen de 10 piezas.",groups:[
   {t:"Salmón",items:[
    ["Maduro Yaki",25000,D+"salmón fresco, aguacate y palmito, cubierto de láminas de maduro."],
@@ -328,7 +384,7 @@ const MENU=[
    ["Vegan Roll",25000,D+"queso crema, maduro, aguacate, pepino y zanahoria en julianas (tempura opcional).",{veg:1}],
    ["Tofuk Roll",25000,D+"kale, aguacate, calabacín y zukini verde y amarillo en tempura, con cobertura de mix de ajonjolí y ralladura de zanahoria.",{veg:1}]]}
  ]},
- {id:"ramen",t:"Ramen",k:"麺",items:[
+ {id:"ramen",t:"Ramen",k:"麺",only:"sp",items:[
   ["Ramen Dragon Hot",34000,"Sopa japonesa picante con fideos, huevo, mix de zucchini, champiñones, cerdo hot chilli, jalapeños, col china y alga nori.",{hot:1}],
   ["Ramen Chicken Crunch",33000,R+"pollo apanado"+RT],
   ["Ramen de Pollo",25000,R+"pollo salteado"+RT],
@@ -338,7 +394,7 @@ const MENU=[
   ["Ramen de Pollo, Cerdo y Camarón",30000,R+"pollo, cerdo, camarón"+RT],
   ["Ramen de Mariscos",33000,R+"camarón, palmito, calamar, pulpo"+RT],
   ["Ramen Vegetariano",20000,R+"huevo, mix de zucchini, aguacate salteado, champiñones, zanahoria, col china y alga nori.",{veg:1}]]},
- {id:"yakimeshi",t:"Yakimeshi",k:"飯",note:YK,items:[
+ {id:"yakimeshi",t:"Yakimeshi",k:"飯",only:"sp",note:YK,items:[
   ["Yakimeshi de Pollo",25000],["Yakimeshi de Cerdo",27000],["Yakimeshi de Camarón",34000],
   ["Yakimeshi de Pollo y Cerdo",26000],["Yakimeshi de Pollo, Cerdo y Camarón",30000],
   ["Yakimeshi de Mariscos",33000],["Yakimeshi Vegetariano",20000,"",{veg:1}]]},
@@ -390,6 +446,13 @@ const key=(id,milk)=>id+(milk?"|leche":"");
 const unit=l=>P[l.id].price+(l.milk?2000:0);
 function save(){store.set("st_cart",cart);store.set("st_sede",sede)}
 
+function setSede(id){
+  const changed=id!==sede;sede=id;
+  const gone=[];Object.keys(cart).forEach(k=>{const c=P[cart[k].id].cat;if(!avail(c)){gone.push(P[cart[k].id].name);delete cart[k]}});
+  save();renderSedes();if(changed||gone.length)renderMenu();renderBar();if(!$("#overlay").hidden)renderLines();syncForm();
+  if(gone.length)toast(`${SEDES.find(s=>s.id===sede).n} no vende ramen ni yakimeshi. Quitamos de tu pedido: ${gone.join(", ")}.`);
+}
+let toastT;function toast(m){const t=$("#toast");t.textContent=m;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>t.hidden=true,6000)}
 function bogotaHour(){const d=new Date();return ((d.getUTCHours()-5+24)%24)+d.getUTCMinutes()/60}
 function isOpen(s){const h=bogotaHour();return h>=s.o&&h<s.c}
 
@@ -411,14 +474,15 @@ function control(p){
 }
 function itemHTML(p){
   const opts=p.f.milk?`<div class="opts"><button type="button" class="opt" data-milk="${p.id}" data-v="0" aria-pressed="${!milkSel[p.id]}">En agua</button><button type="button" class="opt" data-milk="${p.id}" data-v="1" aria-pressed="${!!milkSel[p.id]}">En leche +$2.000</button></div>`:"";
-  return `<div class="item" data-id="${p.id}"><div class="txt"><h3>${esc(p.name)} ${badges(p.f)}</h3>${p.desc?`<p>${esc(p.desc)}</p>`:""}${opts}</div>
+  return `<div class="item" data-id="${p.id}"><div class="txt"><h3>${esc(p.name)} ${badges(p.f)}</h3>${p.f.rolls?`<ul class="rolls">${p.f.rolls.map(r=>`<li>${esc(r)}</li>`).join("")}</ul>`:""}${p.desc?`<p>${esc(p.desc)}</p>`:""}${opts}</div>
    <div class="side"><span class="price">${money(p.price+(milkSel[p.id]?2000:0))}</span><span class="ctl">${control(p)}</span></div></div>`;
 }
+const avail=c=>!c.only||c.only===sede;
 function renderMenu(){
   const q=slug($("#q").value).replace(/-/g," ").trim();
-  const match=p=>!q||slug(p.name+" "+p.desc+" "+p.cat.t+" "+(p.grp&&p.grp.t||"")).replace(/-/g," ").includes(q);
+  const match=p=>!q||slug(p.name+" "+p.desc+" "+(p.f.rolls||[]).join(" ")+" "+p.cat.t+" "+(p.grp&&p.grp.t||"")).replace(/-/g," ").includes(q);
   let html="",any=false;
-  MENU.forEach(c=>{
+  MENU.filter(avail).forEach(c=>{
     let body="";
     if(c.feature){const p=P[slug(c.feature[0])];if(match(p))body+=`<div class="feature" data-id="${p.id}"><div><h3>${esc(p.name)}</h3><p>${esc(p.desc)}</p></div><div class="side"><span class="price">${money(p.price)}</span><span class="ctl">${control(p)}</span></div></div>`}
     (c.groups||[{items:c.items}]).forEach(g=>{
@@ -431,7 +495,7 @@ function renderMenu(){
     html+=`<section id="${c.id}"><div class="sec-head"><span class="kanji" aria-hidden="true">${c.k}</span><h2>${esc(c.t)}</h2></div>${c.note&&!q?`<p class="sec-note">${esc(c.note)}</p>`:""}${body}</section>`;
   });
   $("#menu").innerHTML=any?html:`<p class="empty">No encontramos platos con “${esc($("#q").value)}”.</p>`;
-  $("#tabs").innerHTML=MENU.map(c=>`<button class="tab" type="button" data-go="${c.id}">${esc(c.t)}</button>`).join("");
+  $("#tabs").innerHTML=MENU.filter(avail).map(c=>`<button class="tab" type="button" data-go="${c.id}">${esc(c.t)}</button>`).join("");
   spy();
 }
 function refreshItem(id){
@@ -465,7 +529,7 @@ function syncForm(){
 function buildMsg(){
   const s=SEDES.find(x=>x.id===sede);const dom=$("#e-dom").checked;const{t}=totals();
   const L=[`*NUEVO PEDIDO · SUSHITOWN ${s.n.toUpperCase()}*`,""];
-  Object.values(cart).forEach(l=>{const p=P[l.id];L.push(`• ${l.qty} x ${p.name}${l.milk?" (en leche)":""} — ${money(unit(l)*l.qty)}`);if(l.note)L.push(`   _Nota: ${l.note.trim()}_`)});
+  Object.values(cart).forEach(l=>{const p=P[l.id];L.push(`• ${l.qty} x ${p.name}${l.milk?" (en leche)":""} — ${money(unit(l)*l.qty)}`);if(p.f.rolls)L.push(`   (${p.f.rolls.join(", ")})`);if(l.note)L.push(`   _Nota: ${l.note.trim()}_`)});
   const sal=[...document.querySelectorAll("#salsas input:checked")].map(i=>i.value);
   if(sal.length)L.push("","*Salsas:* "+sal.join(", "));
   L.push("",`*Subtotal:* ${money(t)}`);
@@ -494,7 +558,7 @@ document.addEventListener("click",e=>{
   else if(t.dataset.milk){milkSel[t.dataset.milk]=t.dataset.v==="1";refreshItem(t.dataset.milk)}
   else if(t.dataset.linc){const l=cart[t.dataset.linc];change(l.id,l.milk,1)}
   else if(t.dataset.ldec){const l=cart[t.dataset.ldec];change(l.id,l.milk,-1)}
-  else if(t.dataset.pick){sede=t.dataset.pick;save();renderSedes();syncForm();closeGate()}
+  else if(t.dataset.pick){setSede(t.dataset.pick);closeGate()}
   else if(t.dataset.gate){openGate()}
   else if(t.dataset.go){const el=document.getElementById(t.dataset.go);if(el)el.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"})}
   else if(t.id==="openCart"){renderLines();renderSedes();syncForm();$("#overlay").hidden=false;document.body.style.overflow="hidden"}
@@ -515,7 +579,7 @@ document.addEventListener("input",e=>{
   updateLink();
 });
 document.addEventListener("change",e=>{
-  if(e.target.name==="sedeR"){sede=e.target.value;save();renderSedes();}
+  if(e.target.name==="sedeR"){setSede(e.target.value)}
   syncForm();
 });
 // pestaña activa
@@ -528,7 +592,7 @@ let tick;addEventListener("scroll",()=>{cancelAnimationFrame(tick);tick=requestA
 
 $("#salsas").innerHTML=SALSAS.map(s=>`<label><input type="checkbox" id="sal-${slug(s)}" value="${s}">${s}</label>`).join("");
 // limpiar líneas de productos que ya no existan
-Object.keys(cart).forEach(k=>{if(!P[cart[k].id])delete cart[k]});
+Object.keys(cart).forEach(k=>{if(!P[cart[k].id]||!avail(P[cart[k].id].cat))delete cart[k]});
 function openGate(){$("#gate").classList.remove("out");document.body.style.overflow="hidden"}
 function closeGate(){$("#gate").classList.add("out");if($("#overlay").hidden)document.body.style.overflow="";scrollTo({top:0})}
 renderSedes();renderMenu();renderBar();syncForm();openGate();
